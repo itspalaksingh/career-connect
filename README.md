@@ -11,22 +11,21 @@ It includes candidate profiles, saved jobs, recruiter access requests, recruiter
 
 ## Run locally
 
-1. Create `backend/.env` from `backend/.env.example` and set a real MongoDB Atlas URI plus a long random `JWT_SECRET`. Keep this file private.
-2. Start the API from `backend`:
+1. Create `backend/.env` from `backend/.env.example` and set a real MongoDB Atlas URI plus a long random `JWT_SECRET`. If your network blocks direct DNS requests, set `MONGODB_DNS_OVER_HTTPS=true`. Keep this file private.
+2. Install dependencies in both apps once:
 
    ```powershell
-   npm install
+   npm --prefix backend install
+   npm --prefix CareerConnect/frontend install
+   ```
+
+3. From the project root, start the API and web app together:
+
+   ```powershell
    npm run dev
    ```
 
-3. In a second terminal, start the web app from `CareerConnect/frontend`:
-
-   ```powershell
-   npm ci
-   npm run dev
-   ```
-
-4. Open `http://localhost:3000`. The frontend proxies `/api/*` to `http://localhost:5000` by default. To change the API origin, set `API_BASE_URL` in `CareerConnect/frontend/.env.local`.
+4. Open `http://localhost:3000`. The frontend proxies `/api/*` to `http://localhost:5000` by default. To run either app separately, use `npm run dev:api` or `npm run dev:web` from the project root. To change the API origin, set `API_BASE_URL` in `CareerConnect/frontend/.env.local`.
 
 ## Deploy to Vercel
 

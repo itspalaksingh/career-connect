@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { getJobId, type JobListing, type JobSearchResponse } from '@/data/jobs';
+import { getJobId, searchJobs, type JobListing } from '@/data/jobs';
 import SiteFooter from './components/SiteFooter';
 
 type SearchFilters = { keyword: string; location: string; type: string; workMode: string; minSalary: string; maxSalary: string };
@@ -48,6 +48,7 @@ export default function Home() {
   const [userRole, setUserRole] = useState('');
   const jobRailRef = useRef<HTMLDivElement>(null);
   const [jobs, setJobs] = useState<JobListing[]>([]);
+  const [jobsSourceMessage, setJobsSourceMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [retryCount, setRetryCount] = useState(0);
@@ -59,18 +60,13 @@ export default function Home() {
       if (value.trim()) params.set(key, value.trim());
     });
 
-    fetch(`/api/jobs?${params.toString()}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Jobs load nahi ho paayi.');
-        }
-        return response.json() as Promise<JobSearchResponse>;
-      })
+    searchJobs(params)
       .then((data) => {
         if (!active) return;
         setJobs(data.jobs);
         setTotalJobs(data.total);
         setTotalPages(data.pages);
+        setJobsSourceMessage(data.sourceMessage || '');
         setError('');
       })
       .catch(() => {
@@ -403,6 +399,7 @@ export default function Home() {
               <p className="text-secondary mb-0">
                 Discover opportunities for your next career move.
               </p>
+              {jobsSourceMessage && <p className="small text-secondary mt-2 mb-0" role="status">{jobsSourceMessage}</p>}
             </div>
 
             <div className="d-flex align-items-center gap-3">

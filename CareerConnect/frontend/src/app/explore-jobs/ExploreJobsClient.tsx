@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FaArrowRight, FaBriefcase, FaMapMarkerAlt, FaSearch } from 'react-icons/fa';
-import { getJobId, type JobListing, type JobSearchResponse } from '@/data/jobs';
+import { getJobId, searchJobs, type JobListing } from '@/data/jobs';
 import SiteFooter from '../components/SiteFooter';
 
 type Filters = { keyword: string; location: string; type: string; workMode: string; experienceLevel: string; minSalary: string; maxSalary: string };
@@ -19,6 +19,7 @@ export default function ExploreJobsClient() {
     return Object.fromEntries(Object.keys(emptyFilters).map((key) => [key, params.get(key) || ''])) as Filters;
   });
   const [jobs, setJobs] = useState<JobListing[]>([]);
+  const [jobsSourceMessage, setJobsSourceMessage] = useState('');
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
@@ -40,16 +41,13 @@ export default function ExploreJobsClient() {
     setLoading(true);
     setError('');
 
-    fetch(`/api/jobs?${params.toString()}`)
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Opportunities are temporarily unavailable. Please try again shortly.');
-        return response.json() as Promise<JobSearchResponse>;
-      })
+    searchJobs(params)
       .then((data) => {
         if (!active) return;
         setJobs(data.jobs);
         setTotal(data.total);
         setPages(data.pages);
+        setJobsSourceMessage(data.sourceMessage || '');
       })
       .catch((loadError: Error) => { if (active) setError(loadError.message || 'Could not connect to the jobs service.'); })
       .finally(() => { if (active) setLoading(false); });
@@ -105,6 +103,7 @@ export default function ExploreJobsClient() {
           <div><span className="explore-eyebrow">CAREERCONNECT OPPORTUNITIES</span><h2>Explore jobs</h2></div>
           <p>{loading ? 'Finding matching roles…' : `${total} ${total === 1 ? 'opportunity' : 'opportunities'} found`}</p>
         </div>
+        {jobsSourceMessage && <p className="small text-secondary mb-3" role="status">{jobsSourceMessage}</p>}
 
         <div className="explore-layout">
           <form className="explore-filter-card" onSubmit={submitSearch}>

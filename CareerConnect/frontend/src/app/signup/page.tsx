@@ -29,6 +29,7 @@ export default function SignupPage() {
     }
 
     setSubmitting(true);
+    let accountCreated = false;
     try {
       const response = await fetch(
         '/api/auth/signup',
@@ -53,6 +54,7 @@ export default function SignupPage() {
         return;
       }
 
+      accountCreated = true;
       const loginResponse = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -68,7 +70,9 @@ export default function SignupPage() {
 
       setMessage(loginData.message || data.message || 'Account created. Please sign in to continue.');
     } catch {
-      setMessage('Could not connect to the server. Please try again.');
+      setMessage(accountCreated
+        ? 'Your account was created, but sign-in could not finish. Please go to Log in and try again.'
+        : 'Cannot reach the account service. Start the project with “npm run dev” and make sure MongoDB is available.');
     } finally {
       setSubmitting(false);
     }

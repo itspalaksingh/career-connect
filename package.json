@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "dev": "npm --prefix CareerConnect/frontend run dev"
+    "dev": "node scripts/dev.js",
+    "dev:web": "npm --prefix CareerConnect/frontend run dev",
+    "dev:api": "npm --prefix backend run dev"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",

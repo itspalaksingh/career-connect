@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const dns = require('node:dns');
 
 const dnsServers = (process.env.MONGODB_DNS_SERVERS || '')
@@ -6,6 +5,10 @@ const dnsServers = (process.env.MONGODB_DNS_SERVERS || '')
   .map((server) => server.trim())
   .filter(Boolean);
 if (dnsServers.length) dns.setServers(dnsServers);
+
+const dnsOverHttpsEnabled = process.env.MONGODB_DNS_OVER_HTTPS === 'true';
+const lookup = dnsOverHttpsEnabled ? require('./dnsOverHttps')() : undefined;
+const mongoose = require('mongoose');
 
 let connectionPromise;
 
@@ -22,6 +25,7 @@ async function connectDatabase() {
     connectionPromise = mongoose.connect(process.env.MONGODB_URI, {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 10000,
+      ...(lookup ? { lookup } : {}),
     }).catch((error) => {
       connectionPromise = undefined;
       throw error;

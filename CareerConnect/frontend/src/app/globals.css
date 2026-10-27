@@ -1168,7 +1168,15 @@ input:focus {
   .site-footer-main { gap: 1.8rem 1rem; }
   .site-footer-column h2 { font-size: 0.8rem; }
   .site-footer-column li a { font-size: 0.79rem; }
-  .site-footer-bottom > .container > div { gap: 0.8rem !important; }
+  .site-footer-bottom > .container {
+    justify-content: center !important;
+    gap: 0.65rem !important;
+  }
+  .site-footer-bottom > .container > div {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.8rem !important;
+  }
   .site-footer-bottom { text-align: center; }
   .recruiter-cta { grid-template-columns: 1fr; }
   .recruiter-cta > .btn { grid-column: auto; }

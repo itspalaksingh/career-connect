@@ -71,7 +71,7 @@ export default function LoginPage() {
         router.replace('/dashboard');
       }
     } catch {
-      setMessage('Could not connect to the server. Please try again.');
+      setMessage('Cannot reach the login service. Start the project with “npm run dev” and make sure MongoDB is available.');
     }
   }
 
