@@ -16,19 +16,6 @@ const values = [
 export default function AboutPage() {
   return (
     <main className="about-page">
-      <nav className="navbar career-navbar sticky-top" aria-label="Main navigation">
-        <div className="container py-2">
-          <Link className="navbar-brand career-brand" href="/">
-            <span className="career-brand-mark"><FaBriefcase aria-hidden="true" /></span>
-            <span>CareerConnect<span className="career-brand-dot">.</span></span>
-          </Link>
-          <div className="d-flex align-items-center gap-2">
-            <Link className="btn btn-link text-decoration-none" href="/explore-jobs">Explore jobs</Link>
-            <Link className="btn btn-primary rounded-pill px-3" href="/signup">Get started</Link>
-          </div>
-        </div>
-      </nav>
-
       <section className="about-hero">
         <div className="container py-5 py-lg-6">
           <div className="about-hero-copy">

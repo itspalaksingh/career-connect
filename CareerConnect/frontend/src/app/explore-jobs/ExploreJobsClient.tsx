@@ -71,20 +71,6 @@ export default function ExploreJobsClient() {
 
   return (
     <main className="explore-page">
-      <header className="explore-header">
-        <div className="container d-flex align-items-center justify-content-between gap-3">
-          <Link className="navbar-brand career-brand" href="/">
-            <span className="career-brand-mark"><FaBriefcase aria-hidden="true" /></span>
-            <span>CareerConnect<span className="career-brand-dot">.</span></span>
-          </Link>
-          <nav className="d-flex align-items-center gap-2 gap-md-3" aria-label="Main navigation">
-            <Link className="explore-header-link" href="/about">About us</Link>
-            <Link className="explore-header-link" href="/saved-jobs">Saved jobs</Link>
-            <Link className="btn btn-outline-primary rounded-pill px-3" href="/login">Log in</Link>
-          </nav>
-        </div>
-      </header>
-
       <section className="explore-hero">
         <div className="container py-5">
           <span className="explore-eyebrow">YOUR NEXT STEP STARTS HERE</span>

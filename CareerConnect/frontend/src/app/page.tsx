@@ -15,8 +15,6 @@ import {
   FaArrowRight,
   FaGraduationCap,
   FaMapMarkerAlt,
-  FaBars,
-  FaTimes,
   FaChevronLeft,
   FaChevronRight,
   FaHeart,
@@ -43,9 +41,6 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalJobs, setTotalJobs] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState('');
   const jobRailRef = useRef<HTMLDivElement>(null);
   const [jobs, setJobs] = useState<JobListing[]>([]);
   const [jobsSourceMessage, setJobsSourceMessage] = useState('');
@@ -79,29 +74,7 @@ export default function Home() {
     return () => { active = false; };
   }, [filters, page, retryCount]);
 
-  useEffect(() => {
-    fetch('/api/auth/me', {
-      credentials: 'include',
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          setIsLoggedIn(false);
-          setUserRole('');
-          return;
-        }
-        const data = await response.json();
-        setIsLoggedIn(true);
-        setUserRole(data.user?.role || 'Candidate');
-      })
-      .catch(() => {
-        setIsLoggedIn(false);
-        setUserRole('');
-      });
-  }, []);
-
   const filteredJobs = jobs;
-
-  const closeMenu = () => setMenuOpen(false);
   const scrollJobs = (direction: 'previous' | 'next') => {
     const rail = jobRailRef.current;
     if (!rail) return;
@@ -114,147 +87,6 @@ export default function Home() {
 
   return (
     <main className="career-home">
-      {/* Responsive Navbar */}
-      <nav className="navbar navbar-expand-lg career-navbar sticky-top">
-        <div className="container">
-          <Link
-            className="navbar-brand career-brand me-auto"
-            href="#home"
-            onClick={closeMenu}
-          >
-            <span className="career-brand-mark"><FaBriefcase aria-hidden="true" /></span>
-            <span>CareerConnect<span className="career-brand-dot">.</span></span>
-          </Link>
-
-          <button
-            className="btn btn-outline-primary d-lg-none ms-2"
-            type="button"
-            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-expanded={menuOpen}
-            aria-controls="careerconnect-navbar"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
-          </button>
-
-          <div
-            id="careerconnect-navbar"
-            className={`navbar-collapse ${
-              menuOpen ? 'd-flex' : 'd-none'
-            } d-lg-flex flex-column flex-lg-row align-items-stretch align-items-lg-center`}
-          >
-            <div className="navbar-nav ms-lg-auto align-items-stretch align-items-lg-center gap-lg-3 pt-3 pt-lg-0">
-              <a
-                className="nav-link px-3"
-                href="#home"
-                onClick={closeMenu}
-              >
-                Home
-              </a>
-
-              <a
-                className="nav-link px-3"
-                href="/explore-jobs"
-                onClick={closeMenu}
-              >
-                Find Jobs
-              </a>
-
-              <Link
-                className="nav-link px-3"
-                href="/about"
-                onClick={closeMenu}
-              >
-                About Us
-              </Link>
-
-              <div className="career-nav-actions">
-              <a
-                className="btn btn-primary rounded-pill px-4 my-1 my-lg-0"
-                href="/explore-jobs"
-                onClick={closeMenu}
-              >
-                Explore Jobs
-              </a>
-
-              {isLoggedIn ? (
-                <button
-                  type="button"
-                  className="btn btn-outline-primary rounded-pill px-4 my-1 my-lg-0"
-                  onClick={async () => {
-                    try {
-                      await fetch('/api/auth/logout', {
-                        method: 'POST',
-                        credentials: 'include',
-                      });
-                    } finally {
-                      setIsLoggedIn(false);
-                      closeMenu();
-                      router.push('/login');
-                    }
-                  }}
-                >
-                  Logout
-                </button>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="btn btn-outline-primary rounded-pill px-4 my-1 my-lg-0"
-                    onClick={closeMenu}
-                  >
-                    Login
-                  </Link>
-
-                  <Link
-                    href="/signup"
-                    className="btn btn-primary rounded-pill px-4 my-1 my-lg-0"
-                    onClick={closeMenu}
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
-              {isLoggedIn && (
-                <Link href="/profile" className="btn btn-outline-primary rounded-pill px-4 my-1 my-lg-0" onClick={closeMenu}>
-                  Profile
-                </Link>
-              )}
-              {isLoggedIn && userRole === 'Candidate' && (
-                <Link href="/applications" className="btn btn-outline-primary rounded-pill px-4 my-1 my-lg-0" onClick={closeMenu}>
-                  My Applications
-                </Link>
-              )}
-              {isLoggedIn && (
-                <Link href="/dashboard" className="btn btn-outline-primary rounded-pill px-4 my-1 my-lg-0" onClick={closeMenu}>
-                  Dashboard
-                </Link>
-              )}
-              {isLoggedIn && userRole === 'Admin' && (
-                <Link href="/admin" className="btn btn-outline-primary rounded-pill px-4 my-1 my-lg-0" onClick={closeMenu}>Admin</Link>
-              )}
-                <Link
-                href="/saved-jobs"
-                className="btn btn-outline-primary rounded-pill px-4 my-1 my-lg-0"
-                onClick={closeMenu}
-              >
-              Saved Jobs
-              </Link>
-              {isLoggedIn && ['Recruiter', 'Admin'].includes(userRole) && <Link
-  href="/post-jobs"
-                className="btn btn-primary rounded-pill px-4 my-1 my-lg-0"
-                onClick={closeMenu}
->
-  <i className="bi bi-plus-circle me-2"></i>
-  Post a Job
-              </Link>}
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section id="home" className="career-hero py-5">
         <div className="container py-lg-5 career-hero-content">

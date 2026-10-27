@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./globals.css";
 import WelcomeAnimation from './components/WelcomeAnimation';
+import SiteNavbar from './components/SiteNavbar';
 
 export const metadata: Metadata = {
   title: {
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body>
+        <SiteNavbar />
         {children}
         <WelcomeAnimation />
       </body>
