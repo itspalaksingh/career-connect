@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "dev": "npm --prefix CareerConnect/frontend run dev"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8",
+    "react-icons": "^5.7.0"
+  }
+}
