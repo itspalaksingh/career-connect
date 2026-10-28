@@ -19,7 +19,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body>
-        <SiteNavbar />
+        <div className="site-navbar-slot">
+          <SiteNavbar />
+        </div>
         {children}
         <WelcomeAnimation />
       </body>

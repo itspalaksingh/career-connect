@@ -432,10 +432,15 @@ a {
 }
 
 .site-navbar {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  inset: 0 0 auto;
   z-index: 1100;
-  flex: 0 0 auto;
+  width: 100%;
+}
+
+.site-navbar-slot {
+  height: 4.15rem;
+  flex: 0 0 4.15rem;
 }
 
 .career-navbar .container {
