@@ -599,6 +599,14 @@ a {
     #f7f8fc !important;
 }
 
+.home-about-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .auth-page-background {
   background:
     radial-gradient(ellipse at 12% 18%, rgb(223 232 255 / 72%), transparent 32%),
@@ -1089,6 +1097,8 @@ input:focus {
   .career-hero-card { padding: 1.25rem !important; }
   .career-hero-icon { min-height: 8rem !important; height: 8rem !important; }
   .career-hero-icon svg { width: 4.5rem; height: 4.5rem; }
+  .home-about-actions { width: min(100%, 22rem); margin-inline: auto; flex-direction: column; }
+  .home-about-actions > .btn { width: 100%; }
   .explore-search-panel { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.75rem; }
   .explore-search-field { min-height: 2.9rem; }
   .explore-search-field + .explore-search-field { border-top: 1px solid #e9edf4; border-left: 0; }

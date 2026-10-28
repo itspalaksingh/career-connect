@@ -375,8 +375,10 @@ export default function Home() {
             through meaningful career opportunities.
           </p>
 
-          <Link href="/about" className="btn btn-outline-primary rounded-pill px-4 me-2">Meet CareerConnect</Link>
-          <Link href="/explore-jobs" className="btn btn-primary rounded-pill px-4">Explore Opportunities</Link>
+          <div className="home-about-actions">
+            <Link href="/about" className="btn btn-outline-primary rounded-pill px-4">Meet CareerConnect</Link>
+            <Link href="/explore-jobs" className="btn btn-primary rounded-pill px-4">Explore Opportunities</Link>
+          </div>
         </div>
       </section>
 
