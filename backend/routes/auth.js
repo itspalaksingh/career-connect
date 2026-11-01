@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('node:crypto');
 const { rateLimit } = require('express-rate-limit');
 const User = require('../models/user');
+const LoginEvent = require('../models/LoginEvent');
 const connectDatabase = require('../db');
 const sendEmail = require('../services/email');
 
@@ -283,6 +284,17 @@ router.post('/login', authLimiter, requireAuthDatabase, async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
+
+    try {
+      await LoginEvent.create({
+        user: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      });
+    } catch (activityError) {
+      console.error('Login activity notification error:', activityError.message);
+    }
 
     res.cookie('token', token, {
       httpOnly: true,

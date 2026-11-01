@@ -1,12 +1,26 @@
 const express = require('express');
 const JobReport = require('../models/JobReport');
 const Job = require('../models/Job');
+const LoginEvent = require('../models/LoginEvent');
 const User = require('../models/user');
 const authMiddleware = require('../middleware/authMiddleware');
 const { requireRole } = authMiddleware;
 
 const router = express.Router();
 router.use(authMiddleware, requireRole('Admin'));
+
+router.get('/login-activity', async (req, res) => {
+  try {
+    const events = await LoginEvent.find()
+      .sort({ createdAt: -1 })
+      .limit(30)
+      .select('name email role createdAt')
+      .lean();
+    return res.json(events);
+  } catch (error) {
+    return res.status(500).json({ message: 'Could not load recent login activity.' });
+  }
+});
 
 router.get('/reports', async (req, res) => {
   try {
