@@ -27,6 +27,40 @@ function appUrl(path) {
   return `${base}${path}`;
 }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  })[character]);
+}
+
+async function notifyAdminsOfLogin(user) {
+  if (!process.env.RESEND_API_KEY || !process.env.MAIL_FROM) return;
+
+  try {
+    const admins = await User.find({ role: 'Admin' }).select('email').lean();
+    const time = new Intl.DateTimeFormat('en-IN', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'Asia/Kolkata',
+    }).format(new Date());
+    const details = `<p>A user signed in to CareerConnect.</p><p><strong>Name:</strong> ${escapeHtml(user.name)}</p><p><strong>Email:</strong> ${escapeHtml(user.email)}</p><p><strong>Role:</strong> ${escapeHtml(user.role)}</p><p><strong>Time:</strong> ${time} IST</p>`;
+
+    await Promise.all(admins.map(async ({ email }) => {
+      try {
+        await sendEmail({ to: email, subject: 'New CareerConnect sign-in', html: details });
+      } catch (error) {
+        console.error('Admin login email notification error:', error.message);
+      }
+    }));
+  } catch (error) {
+    console.error('Admin login email notification error:', error.message);
+  }
+}
+
 function requireAuthDatabase(req, res, next) {
   connectDatabase()
     .then(() => next())
@@ -295,6 +329,7 @@ router.post('/login', authLimiter, requireAuthDatabase, async (req, res) => {
     } catch (activityError) {
       console.error('Login activity notification error:', activityError.message);
     }
+    await notifyAdminsOfLogin(user);
 
     res.cookie('token', token, {
       httpOnly: true,
